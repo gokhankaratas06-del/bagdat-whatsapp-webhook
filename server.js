@@ -9,7 +9,7 @@ const VERIFY_TOKEN = "bagdat_verify_2026";
 
 const GEMINI_API_KEY = "AIzaSyDCRQHYndiHjhfha6TNgyv6OvhanZ2WAmc";
 const WHATSAPP_TOKEN = "EAAVB8SZByWlEBRpRvNDcC6vldqV3nnibtpmFzuCJPBiQ72XZCPzg9ZCitZAmpCALuMp0tVtoZAXSjyggFt6mlr2tvbrCU3WNa4HhxuHzdlZCzL0nLZA9cZA5XF6h5Bjspx8pj2r96IDGxpy75rlsKV3oSVbps1gaXO3j8dlpDiLn4LDifwlVZCkSPUT2omClFncU96qzZCVzF9EV9jCyc4ECC9hEpHnYxsEwk7imJyhpywOmtgOjdBMQ5pAA50b31KcXCjd6RUr584FwaiGHZBmyEgnZAjTknYbtNZB8fKVUZD";
-const PHONE_NUMBER_ID = "176770162188683";
+const PHONE_NUMBER_ID = "161940373677696";
 
 app.get("/", (req, res) => {
   res.send("Webhook aktif");
