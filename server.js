@@ -7,7 +7,7 @@ app.use(express.json());
 
 const VERIFY_TOKEN = "bagdat_verify_2026";
 
-const GEMINI_API_KEY = "AIzaSyDCRQHYndiHjhfha6TNgyv6OvhanZ2WAmc";
+const API_KEY = process.env.GEMINI_API_KEY
 const WHATSAPP_TOKEN = "EAAVB8SZByWlEBRpRvNDcC6vldqV3nnibtpmFzuCJPBiQ72XZCPzg9ZCitZAmpCALuMp0tVtoZAXSjyggFt6mlr2tvbrCU3WNa4HhxuHzdlZCzL0nLZA9cZA5XF6h5Bjspx8pj2r96IDGxpy75rlsKV3oSVbps1gaXO3j8dlpDiLn4LDifwlVZCkSPUT2omClFncU96qzZCVzF9EV9jCyc4ECC9hEpHnYxsEwk7imJyhpywOmtgOjdBMQ5pAA50b31KcXCjd6RUr584FwaiGHZBmyEgnZAjTknYbtNZB8fKVUZD";
 const PHONE_NUMBER_ID = "161940373677696";
 
@@ -41,7 +41,7 @@ app.post("/webhook/whatsapp-ai", async (req, res) => {
     console.log("Mesaj:", text);
 
   const aiResponse = await axios.post(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
   {
     contents: [
       {
