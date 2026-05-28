@@ -15,17 +15,24 @@ app.get("/", (req, res) => {
   res.send("Webhook aktif");
 });
 
-app.get("/webhook/whatsapp-ai", (req, res) => {
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
+app.get('/webhook', (req, res) => {
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
 
-  if (token === VERIFY_TOKEN) {
-    return res.status(200).send(challenge);
-  }
+    // Render'a eklediğimiz WEBHOOK_VERIFY_TOKEN'ı okuyoruz
+    const verifyToken = process.env.WEBHOOK_VERIFY_TOKEN || 'bagdat_verify_2026';
 
-  return res.sendStatus(403);
+    if (mode && token) {
+        if (mode === 'subscribe' && token === verifyToken) {
+            console.log('WEBHOOK_VERIFIED');
+            return res.status(200).send(challenge);
+        } else {
+            return res.sendStatus(403);
+        }
+    }
+    return res.sendStatus(400);
 });
-
 app.post("/webhook/whatsapp-ai", async (req, res) => {
   try {
     const message =
