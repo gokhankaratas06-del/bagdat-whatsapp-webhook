@@ -40,14 +40,14 @@ app.post("/webhook/whatsapp-ai", async (req, res) => {
 
     console.log("Mesaj:", text);
 
-   const aiResponse = await axios.post(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
+  const aiResponse = await axios.post(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
   {
     contents: [
       {
         parts: [
           {
-            text: `Sen Bağdat Baharat profesyonel WhatsApp satış danışmanısın.\nKullanıcı: ${text}`
+            text: `Sen Bağdat Baharat profesyonel WhatsApp satış danışmanısın. Kullanıcı mesajı: ${text}`
           }
         ]
       }
@@ -55,7 +55,7 @@ app.post("/webhook/whatsapp-ai", async (req, res) => {
   }
 );
 
-    const reply =
+const reply =
   aiResponse.data.candidates[0].content.parts[0].text;
 
     await axios.post(
