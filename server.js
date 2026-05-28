@@ -1,26 +1,21 @@
-const express = require("express");
-const axios = require("axios");
-
+const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
+// Gelen JSON verilerini okuyabilmek için
 app.use(express.json());
 
-const VERIFY_TOKEN = "bagdat_verify_2026";
-
-const API_KEY = process.env.GEMINI_API_KEY
-const WHATSAPP_TOKEN = "EAAVB8SZByWlEBRpRvNDcC6vldqV3nnibtpmFzuCJPBiQ72XZCPzg9ZCitZAmpCALuMp0tVtoZAXSjyggFt6mlr2tvbrCU3WNa4HhxuHzdlZCzL0nLZA9cZA5XF6h5Bjspx8pj2r96IDGxpy75rlsKV3oSVbps1gaXO3j8dlpDiLn4LDifwlVZCkSPUT2omClFncU96qzZCVzF9EV9jCyc4ECC9hEpHnYxsEwk7imJyhpywOmtgOjdBMQ5pAA50b31KcXCjd6RUr584FwaiGHZBmyEgnZAjTknYbtNZB8fKVUZD";
-const PHONE_NUMBER_ID = "161940373677696";
-
-app.get("/", (req, res) => {
-  res.send("Webhook aktif");
+// Ana sayfa kontrolü (Sitenin çalıştığını görmek için)
+app.get('/', (req, res) => {
+    res.send('WhatsApp Webhook Sunucusu Aktif!');
 });
 
+// META DOĞRULAMA ROTASI (İşte burası eksik veya hatalıydı)
 app.get('/webhook', (req, res) => {
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
 
-    // Render'a eklediğimiz WEBHOOK_VERIFY_TOKEN'ı okuyoruz
     const verifyToken = process.env.WEBHOOK_VERIFY_TOKEN || 'bagdat_verify_2026';
 
     if (mode && token) {
@@ -33,66 +28,14 @@ app.get('/webhook', (req, res) => {
     }
     return res.sendStatus(400);
 });
-app.post("/webhook/whatsapp-ai", async (req, res) => {
-  try {
-    const message =
-      req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-    if (!message) {
-      return res.sendStatus(200);
-    }
-
-    const from = message.from;
-    const text = message.text?.body || "";
-
-    console.log("Mesaj:", text);
-
-  const aiResponse = await axios.post(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-  {
-    contents: [
-      {
-        parts: [
-          {
-            text: `Sen Bağdat Baharat profesyonel WhatsApp satış danışmanısın. Kullanıcı mesajı: ${text}`
-          }
-        ]
-      }
-    ]
-  }
-);
-
-const reply =
-  aiResponse.data.candidates[0].content.parts[0].text;
-
-    await axios.post(
-      `https://graph.facebook.com/v20.0/${PHONE_NUMBER_ID}/messages`,
-      {
-        messaging_product: "whatsapp",
-        to: from,
-        type: "text",
-        text: {
-          body: reply
-        }
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
+// İleride mesajları almak için kullanılacak POST rotası
+app.post('/webhook', (req, res) => {
+    const body = req.body;
+    console.log('Gelen Mesaj Verisi:', JSON.stringify(body, null, 2));
     res.sendStatus(200);
-
-  } catch (err) {
-    console.error(err.response?.data || err.message);
-    res.sendStatus(500);
-  }
 });
 
-const PORT = process.env.PORT || 10000;
-
 app.listen(PORT, () => {
-  console.log("Server çalışıyor");
+    console.log(`Sunucu ${PORT} portunda çalışıyor...`);
 });
